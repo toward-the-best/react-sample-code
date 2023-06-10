@@ -18,9 +18,9 @@ const reducer = (state, action) => {
     case 'INIT':
       return action.data;
     case 'CREATE':
-      const newItem = [
+      const newItem = {
         ...action.data,
-      ]
+      }
       newState = [newItem, ...state];
       break;
     case 'REMOVE':
@@ -87,7 +87,7 @@ function App() {
         emotion
       }
     });
-    dataId.current++;
+    dataId.current += 1;
   }
   // REMOVE
 
@@ -98,13 +98,13 @@ function App() {
     })
   }
   // EDIT
-  const onEdit = (targetId, date, conetnt, emotion) => {
+  const onEdit = (targetId, date, content, emotion) => {
     dispatch({
       type: 'EDIT',
       data: {
         id: targetId,
         date: new Date(date).getTime(),
-        conetnt,
+        content,
         emotion
       }
     });
