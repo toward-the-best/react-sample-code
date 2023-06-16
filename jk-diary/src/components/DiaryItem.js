@@ -9,10 +9,11 @@ const DiaryItem = ({ id, emotion, content, date }) => {
     const strDate = new Date(parseInt(date)).toLocaleString();
     return (
         <div className="DiaryItem">
-            <div className={["emotion_img_wrapper", `emotion_img_wrapper_${emotion}`].join(" ")}>
-                <img src={process.env.PUBLIC_URL + `assets/emotion${emotion}.png`} />
+            <div
+                className={[ "emotion_img_wrapper", `emotion_img_wrapper_${ emotion }` ].join(" ")}>
+                <img src={process.env.PUBLIC_URL + `assets/emotion${ emotion }.png`} />
             </div>
-            <div className="info_wrapper" onClick={() => navigate(`/dirary/${id}`)} >
+            <div className="info_wrapper" onClick={() => navigate(`/dirary/${ id }`)}>
                 <div className="diaryDate">
                     {strDate}
                 </div>
@@ -20,8 +21,8 @@ const DiaryItem = ({ id, emotion, content, date }) => {
                     {content.slice(0, 25)}
                 </div>
             </div>
-            <div className="btn_wrapper" >
-                <Mybutton text="수정하기" onClick={() => navigate(`/edit/${id}`)} />
+            <div className="btn_wrapper">
+                <Mybutton text="수정하기" onClick={() => navigate(`/edit/${ id }`)} />
             </div>
 
         </div >

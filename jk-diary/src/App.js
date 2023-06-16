@@ -14,21 +14,23 @@ const reducer = (state, action) => {
   let newState = [];
 
 
-  switch (action.type) {
+  switch(action.type) {
     case 'INIT':
       return action.data;
     case 'CREATE':
       const newItem = {
         ...action.data,
       }
-      newState = [newItem, ...state];
+      newState = [ newItem, ...state ];
       break;
     case 'REMOVE':
-      return state.filter((it) => it.id !== action.targetId);
+      newState = state.filter((it) => it.id !== action.targetId);
+      break;
     case 'EDIT':
-      return state.filter((it) => it === action.data.id ? {
+      newState = state.map((it) => it.id === action.data.id ? {
         ...action.data
       } : it);
+      break;
     default:
       return state;
   }
@@ -72,10 +74,10 @@ const dummyData = [
   }
 ]
 
-function App() {
-  const [data, dispatch] = useReducer(reducer, dummyData);
+function App () {
+  const [ data, dispatch ] = useReducer(reducer, dummyData);
 
-  const dataId = useRef(0);
+  const dataId = useRef(6);
   // CREATE
   const onCreate = (date, content, emotion) => {
     dispatch({
@@ -115,24 +117,10 @@ function App() {
       <DiaryDispatchContext.Provider value={{ onCreate, onEdit, onRemove }}>
         <BrowserRouter>
           <div className="App">
-            {/* <MyHeader headText={"APP"}
-              leftChild={
-                <MyButton text="왼쪽 버튼" onClick={() => alert("왼족 클릭")} />
-              }
-              rightChild={
-                <MyButton text="우측 버튼" onClick={() => alert("우측 클릭")} />
-              }
-
-            />
-            <h2>App.js</h2>
-            <MyButton text={"버튼"} onClick={() => alert("버튼 클릭")} type={"positive"} />
-            <MyButton text={"버튼"} onClick={() => alert("버튼 클릭")} type={"default"} />
-            <MyButton text={"버튼"} onClick={() => alert("버튼 클릭")} type={"negative"} /> */}
-
             <Routes>
               <Route path="/" Component={Home} />
               <Route path='/new' Component={New} />
-              <Route path='/edit' Component={Edit} />
+              <Route path='/edit/:id' Component={Edit} />
               <Route path='/diary/:id' Component={Diary} />
             </Routes>
 

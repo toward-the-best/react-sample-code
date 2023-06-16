@@ -10,32 +10,36 @@ const Home = () => {
 
     //console.log(diaryList);
 
-    const [data, setData] = useState([]);
-    const [curDate, setCurdDate] = useState(new Date())
-    const headText = `${curDate.getFullYear()}년 ${curDate.getMonth() + 1}월`;
+    const [ data, setData ] = useState([]);
+    const [ curDate, setCurdDate ] = useState(new Date())
+    const headText = `${ curDate.getFullYear() }년 ${ curDate.getMonth() + 1 }월`;
 
 
     useEffect(() => {
-        if (diaryList.length >= 1) {
+        if(diaryList.length >= 1) {
             const firstDay = new Date(
                 curDate.getFullYear(),
                 curDate.getMonth(),
                 1
             ).getTime();
 
+            // 시간 비교를위해서 시분초 까지 넣어야한다.
             const lastDay = new Date(
                 curDate.getFullYear(),
                 curDate.getMonth() + 1,
-                0
+                0,
+                23,
+                59,
+                59
             ).getTime();
 
             setData(diaryList.filter((it) => {
                 return firstDay <= it.date && it.date <= lastDay
             }));
         }
-    }, [diaryList, curDate]);
+    }, [ diaryList, curDate ]);
 
-    useEffect(() => { console.log(data) }, [data]);
+    useEffect(() => { console.log(data) }, [ data ]);
 
     const increaseMont = () => {
         setCurdDate(new Date(curDate.setMonth(curDate.getMonth() + 1)));
