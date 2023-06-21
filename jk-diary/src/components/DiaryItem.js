@@ -1,3 +1,4 @@
+import React from "react";
 import Mybutton from "./MyButton"
 import { useNavigate } from "react-router-dom";
 
@@ -10,10 +11,10 @@ const DiaryItem = ({ id, emotion, content, date }) => {
     return (
         <div className="DiaryItem">
             <div
-                className={[ "emotion_img_wrapper", `emotion_img_wrapper_${ emotion }` ].join(" ")}>
+                className={["emotion_img_wrapper", `emotion_img_wrapper_${ emotion }`].join(" ")}>
                 <img src={process.env.PUBLIC_URL + `assets/emotion${ emotion }.png`} />
             </div>
-            <div className="info_wrapper" onClick={() => navigate(`/dirary/${ id }`)}>
+            <div className="info_wrapper" onClick={() => navigate(`/diary/${ id }`)}>
                 <div className="diaryDate">
                     {strDate}
                 </div>
@@ -29,4 +30,4 @@ const DiaryItem = ({ id, emotion, content, date }) => {
     )
 }
 
-export default DiaryItem;
+export default React.memo(DiaryItem);

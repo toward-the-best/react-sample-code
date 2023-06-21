@@ -1,15 +1,17 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import MyButton from "./MyButton";
 import { useNavigate } from "react-router-dom";
 import DiaryItem from "./DiaryItem"
 
-const ConrtolMenu = ({ value, onChange, optionList }) => {
+// React.memo는 전달 받은 prop바뀌지 않으면 Rendering이 일어나지 않게 한다.
+
+const ConrtolMenu = React.memo(({ value, onChange, optionList }) => {
     return <select className="ControlMenu" value={value} onChange={(e) => onChange(e.target.value)}>
         {optionList.map((it, idx) => (
             <option key={idx} value={it.value}>{it.name}</option>
         ))}
     </select>
-}
+});
 
 const optionList = [
     { value: "latest", name: "최신순" },
@@ -25,11 +27,14 @@ const DiaryList = ({ diaryList }) => {
 
     const navigate = useNavigate();
 
+    // 사용자가 만든 함수는 React.memo 를 사용해도 component가 Rendering 될때만다 다시만들어진다.
+    // 이를 해결 하려면 useCallback을 사용하면 된다.
+    // 그러나 useState로 만든 함수는 React.memo를 사용하면 Rendering되지 않는다.
     const [sortType, setSortType] = useState('latest');
     const [filter, setFilter] = useState("all");
 
     const filterCallback = (item) => {
-        if (filter === "good") {
+        if(filter === "good") {
             return parseInt(item.emotion) <= 3;
         } else {
             return parseInt(item.emotion) > 3;
@@ -38,7 +43,7 @@ const DiaryList = ({ diaryList }) => {
 
     const getProessedDiaryList = () => {
         const compare = (a, b) => {
-            if (sortType === "latest") {
+            if(sortType === "latest") {
                 return parseInt(b.date) - parseInt(a.date);
             } else {
                 return parseInt(a.date) - parseInt(b.date);

@@ -5,9 +5,7 @@ import Home from './pages/Home';
 import New from './pages/New';
 import Edit from './pages/Edit';
 import Diary from './pages/Diary';
-import MyButton from './components/MyButton';
-import MyHeader from './components/MyHeader';
-import React, { useReducer, useRef } from 'react';
+import React, { useEffect, useReducer, useRef } from 'react';
 
 
 const reducer = (state, action) => {
@@ -21,7 +19,7 @@ const reducer = (state, action) => {
       const newItem = {
         ...action.data,
       }
-      newState = [ newItem, ...state ];
+      newState = [newItem, ...state];
       break;
     case 'REMOVE':
       newState = state.filter((it) => it.id !== action.targetId);
@@ -34,6 +32,8 @@ const reducer = (state, action) => {
     default:
       return state;
   }
+
+  localStorage.setItem('diary', JSON.stringify(newState));
   return newState;
 };
 
@@ -41,43 +41,20 @@ const reducer = (state, action) => {
 export const DiaryStateContext = React.createContext();
 export const DiaryDispatchContext = React.createContext();
 
-const dummyData = [
-  {
-    id: 1,
-    emotion: 1,
-    content: "오늘의 일기 1",
-    date: 1686315985902
-  },
-  {
-    id: 2,
-    emotion: 2,
-    content: "오늘의 일기 2",
-    date: 1686315985903
-  },
-  {
-    id: 3,
-    emotion: 3,
-    content: "오늘의 일기 3",
-    date: 1686315985904
-  },
-  {
-    id: 4,
-    emotion: 4,
-    content: "오늘의 일기 4",
-    date: 1686315985905
-  },
-  {
-    id: 5,
-    emotion: 5,
-    content: "오늘의 일기 5",
-    date: 1686315985906
-  }
-]
-
 function App () {
-  const [ data, dispatch ] = useReducer(reducer, dummyData);
+  const [data, dispatch] = useReducer(reducer, []);
+  useEffect(() => {
+    const localData = localStorage.getItem("diary");
+    if(localData) {
+      const diaryList = JSON.parse(localData).sort(
+        (a, b) => parseInt(a.id) - parseInt(b.id)
+      );
+      data.current = parseInt(diaryList[0].id) + 1;
+      dispatch({ type: "INIT", data: diaryList })
+    }
+  }, [])
 
-  const dataId = useRef(6);
+  const dataId = useRef(0);
   // CREATE
   const onCreate = (date, content, emotion) => {
     dispatch({

@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, useEffect } from "react";
+import { useState, useRef, useContext, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import MyHeader from "./MyHeader";
 import MyButton from "./MyButton";
@@ -11,16 +11,16 @@ const env = process.env;
 env.PUBLIC_URL = env.PUBLIC_URL || "";
 
 const DiaryEditor = ({ isEdit, originData }) => {
-    const { onCreate, onEdit } = useContext(DiaryDispatchContext);
+    const { onCreate, onEdit, onRemove } = useContext(DiaryDispatchContext);
     const contentRef = useRef();
-    const [ content, setContent ] = useState("");
-    const [ emotion, setEmotion ] = useState(3);
-    const [ date, setDate ] = useState(getStringDate(new Date()));
+    const [content, setContent] = useState("");
+    const [emotion, setEmotion] = useState(3);
+    const [date, setDate] = useState(getStringDate(new Date()));
     const navigate = useNavigate();
 
-    const hadleClickEmote = (emotion) => {
+    const hadleClickEmote = useCallback((emotion) => {
         setEmotion(emotion);
-    }
+    });
 
     const handleSubmit = () => {
         if(content.length < 1) {
@@ -40,13 +40,20 @@ const DiaryEditor = ({ isEdit, originData }) => {
         navigate("/", { replace: true })
     }
 
+    const handleRemove = () => {
+        if(window.confirm("정말 삭제하시겠습니까?")) {
+            onRemove(originData.id);
+            navigate("/", { replace: true })
+        }
+    }
+
     useEffect(() => {
         if(isEdit) {
             setDate(getStringDate(new Date(parseInt(originData.date))));
             setEmotion(originData.emotion);
             setContent(originData.content);
         }
-    }, [ isEdit, originData ])
+    }, [isEdit, originData])
 
     return (
         <div className="DiaryEditor">
@@ -55,6 +62,7 @@ const DiaryEditor = ({ isEdit, originData }) => {
                 leftChild={
                     <MyButton text={"< 뒤로가기"} onClick={() => navigate(-1)} />
                 }
+                rightChild={isEdit && <MyButton text={"삭제하기"} type={"negative"} onClick={() => handleRemove()} />}
             />
             <div>
                 <section>
