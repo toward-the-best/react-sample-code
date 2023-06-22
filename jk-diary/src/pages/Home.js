@@ -7,11 +7,13 @@ import { DiaryStateContext } from "../App";
 
 const Home = () => {
     const diaryList = useContext(DiaryStateContext);
+    useEffect(() => {
+        const titleElement = document.getElementsByTagName('title')[0];
+        titleElement.innerText = `감정 일기장`;
+    }, []);
 
-    //console.log(diaryList);
-
-    const [ data, setData ] = useState([]);
-    const [ curDate, setCurdDate ] = useState(new Date())
+    const [data, setData] = useState([]);
+    const [curDate, setCurdDate] = useState(new Date())
     const headText = `${ curDate.getFullYear() }년 ${ curDate.getMonth() + 1 }월`;
 
 
@@ -37,9 +39,9 @@ const Home = () => {
                 return firstDay <= it.date && it.date <= lastDay
             }));
         }
-    }, [ diaryList, curDate ]);
+    }, [diaryList, curDate]);
 
-    useEffect(() => { console.log(data) }, [ data ]);
+    useEffect(() => { console.log(data) }, [data]);
 
     const increaseMont = () => {
         setCurdDate(new Date(curDate.setMonth(curDate.getMonth() + 1)));

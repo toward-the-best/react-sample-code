@@ -5,12 +5,18 @@ import { DiaryStateContext } from "../App";
 
 
 const Edit = () => {
-    const [ originData, setOriginData ] = useState();
+    const [originData, setOriginData] = useState();
     const navigate = useNavigate();
     const { id } = useParams();
     const diaryList = useContext(DiaryStateContext);
     console.log(id);
     console.log(diaryList);
+
+    useEffect(() => {
+        const titleElement = document.getElementsByTagName('title')[0];
+        console.log(titleElement);
+        titleElement.innerText = `감정 일기장 - ${ id }번 일기 수정`;
+    }, []);
 
     useEffect(() => {
         if(diaryList.length >= 1) {
@@ -25,7 +31,7 @@ const Edit = () => {
             }
         }
 
-    }, [ id, diaryList ])
+    }, [id, diaryList])
     return <div>
         {originData && <DiaryEditor isEdit={true} originData={originData} />}
     </div>
